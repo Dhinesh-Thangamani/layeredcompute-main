@@ -1,0 +1,16 @@
+site_name: LayeredCompute
+site_description: Multi-Layered Intelligence
+
+theme:
+  name: mkdocs
+  custom_dir: docs/overrides
+
+nav:
+  - Home: index.md
+  - Bus Interface:
+      - PCIe-Features:
+          - Error Containment: pci-features/errcontain.md
+      - CXL: cxl.md
+
+extra_css:
+  - stylesheets/extra.css
