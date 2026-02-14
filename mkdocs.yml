@@ -1,5 +1,6 @@
 site_name: LayeredCompute
 site_description: Multi-Layered Intelligence
+site_url: https://layeredcompute.com
 
 theme:
   name: mkdocs
