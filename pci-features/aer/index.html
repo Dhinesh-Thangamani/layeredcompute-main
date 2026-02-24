@@ -6,18 +6,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        <link rel="canonical" href="https://www.layeredcompute.com/i2c/">
-        <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>I2c - LayeredCompute</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../css/brands.min.css" rel="stylesheet">
-        <link href="../css/solid.min.css" rel="stylesheet">
-        <link href="../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
+        <link rel="canonical" href="https://www.layeredcompute.com/pci-features/aer/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Advanced Error Reporting - LayeredCompute</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
         <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
         <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
-        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <link href="../../stylesheets/extra.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
         <script>hljs.highlightAll();</script> 
     </head>
@@ -42,10 +42,10 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a href=".." class="nav-link">Home</a>
+                                <a href="../.." class="nav-link">Home</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
                                 <ul class="dropdown-menu">
                                     
   <li class="dropdown-submenu">
@@ -53,17 +53,17 @@
     <ul class="dropdown-menu">
             
 <li>
-    <a href="../pci-features/errcontain/" class="dropdown-item">Error Containment</a>
+    <a href="../errcontain/" class="dropdown-item">Error Containment</a>
 </li>
             
 <li>
-    <a href="../pci-features/aer/" class="dropdown-item">Advanced Error Reporting</a>
+    <a href="./" class="dropdown-item active" aria-current="page">Advanced Error Reporting</a>
 </li>
     </ul>
   </li>
                                     
 <li>
-    <a href="../cxl/" class="dropdown-item">CXL</a>
+    <a href="../../cxl/" class="dropdown-item">CXL</a>
 </li>
                                 </ul>
                             </li>
@@ -75,6 +75,16 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../errcontain/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../../cxl/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
                     </ul>
                 </div>
             </div>
@@ -92,12 +102,27 @@
     
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#advanced-error-reporting" class="nav-link">Advanced Error Reporting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
                     <div class="col-md-9" role="main">
 
-<p>x86 Features</p></div>
+<h1 id="advanced-error-reporting">Advanced Error Reporting</h1>
+<h1 id="overview">Overview</h1>
+<p>Advanced Error Reporting is error handling and reporting mechanism in PCIe devices. This capability is reported in extended capability register space. AER handles and reports all three classification of errors.</p>
+<p><strong>1. Uncorrectable Fatal Error:</strong> PCIe non-recoverable fatal errors are serious hardware failure in communication which cannot be corrected or recovered. Unresponsive device, instable link, data corruption, protocol violations are few examples of fatal errors. System reboot or hardware reset is required to recover the system to funcational state. </p>
+<p><strong>2. Uncorrectable Non-Fatal Error</strong> PCIe non-fatal errors are less severe errors, however they are not automatically correctable by hardware or firmware. This may not require system reboot. The system continues to operate. The primary difference between fatal and non-fatal is the impact to overall system. The non-fatal does not impact overall system integrity. Does not require system or PCIe hierarchy reset. The error is confined to single device or single transaction. ECRC, unsupported request are the examples of non-fatal errors.</p>
+<p><strong>3. Correctable Error</strong> PCIe correctable errors are automatically corrected by the hardware. The error is still reported to Advanced Error Reporting mechanism. </p></div>
             </div>
         </div>
 
@@ -105,13 +130,13 @@
             <hr>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
         <script>
-            var base_url = "..",
+            var base_url = "../..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../js/base.js"></script>
-        <script src="../search/main.js"></script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

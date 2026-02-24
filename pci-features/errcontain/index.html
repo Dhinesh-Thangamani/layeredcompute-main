@@ -55,6 +55,10 @@
 <li>
     <a href="./" class="dropdown-item active" aria-current="page">Error Containment</a>
 </li>
+            
+<li>
+    <a href="../aer/" class="dropdown-item">Advanced Error Reporting</a>
+</li>
     </ul>
   </li>
                                     
@@ -77,7 +81,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../../cxl/" class="nav-link">
+                                <a rel="next" href="../aer/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -99,6 +103,11 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
+            <li class="nav-item" data-bs-level="1"><a href="#error-containment" class="nav-link">Error Containment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
             <li class="nav-item" data-bs-level="1"><a href="#overview" class="nav-link">Overview</a>
               <ul class="nav flex-column">
               </ul>
@@ -113,9 +122,10 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
+<h1 id="error-containment">Error Containment</h1>
 <h1 id="overview">Overview</h1>
 <p>Consider a two-story house with four bathrooms, where one bathroom is broken. Closing the entire house because of a single unusable bathroom would be absurd. Instead, the faulty bathroom should be isolated until it is repaired, while the rest of the house remains functional.</p>
-<p>Modern computer systems face a similar problem. Large numbers of interconnected devices work together to provide system functionality. Yet a fault in a single device can sometimes bring down the entire system.</p>
+<p>Modern computer systems face a similar problem. Large numbers of interconnected devices work together to provide system functionality. Yet due to single faulty device sometimes the entire system shuts down.</p>
 <p>A better approach is to gracefully handle device failures without disrupting overall system operation. Although losing a device may reduce performance or disable certain features, the system can continue running—avoiding loss of unsaved data and preventing interruptions to real-time services such as banking or stock trading, etc.</p>
 <p><strong>Error containment</strong> is the mechanism that enables this behavior. It detects errors, isolates the faulty device, and either resets it for recovery or logically removes it from the system. This prevents the fault from propagating and affecting other components.</p>
 <h1 id="layers-of-responsibility-in-error-containment">Layers of Responsibility in Error Containment</h1>
