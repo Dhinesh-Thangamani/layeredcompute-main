@@ -12,6 +12,7 @@ nav:
       - PCIe-Features:
           - Error Containment: pci-features/errcontain.md
           - Advanced Error Reporting: pci-features/aer.md
+          - Multi-Segment: pci-features/multisegment.md
       - CXL: cxl.md
 
 extra_css:
