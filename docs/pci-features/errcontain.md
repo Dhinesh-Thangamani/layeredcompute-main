@@ -1,8 +1,9 @@
+# Error Containment
 # Overview
 
 Consider a two-story house with four bathrooms, where one bathroom is broken. Closing the entire house because of a single unusable bathroom would be absurd. Instead, the faulty bathroom should be isolated until it is repaired, while the rest of the house remains functional.
 
-Modern computer systems face a similar problem. Large numbers of interconnected devices work together to provide system functionality. Yet a fault in a single device can sometimes bring down the entire system.
+Modern computer systems face a similar problem. Large numbers of interconnected devices work together to provide system functionality. Yet due to single faulty device sometimes the entire system shuts down.
 
 A better approach is to gracefully handle device failures without disrupting overall system operation. Although losing a device may reduce performance or disable certain features, the system can continue running—avoiding loss of unsaved data and preventing interruptions to real-time services such as banking or stock trading, etc.
 
