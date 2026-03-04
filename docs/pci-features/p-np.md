@@ -1,6 +1,6 @@
 # Posted Transaction
 
-In PCIe, posted transaction is a request sent by the originator that does not require a completion response from the target. These are often referred to as "Fire-and-Forget" transactions. 
+In PCIe, posted transaction is a request sent by the originator that does not require a completion response from the target device. These are often referred to as "Fire-and-Forget" transactions. 
 
 Although the originator does not receive a completion status, reliable delivery is ensured by the PCIe link-level protocol mechanisms (ACK/NACK and replay buffers). So, the transaction is guaranteed to reach the destination at the data link layer, but the requestor does not receive an explicit confirmation from the target device that the operation has been processed. 
 
@@ -13,3 +13,15 @@ Common examples of posted transactions in PCIe include:
 * **Message Signaled Interrupts - Extended (MSI-X)**
 
 # Non-Posted Transaction
+
+In PCIe, non-posted transaction is a type of request that requires completion response from the target device. The transaction is not considered complete until the originator receives the completion message.
+
+These provide guaranteed delivery and response, essential for the operations where the originator needs data back or needs confirmation.
+
+As the transaction response is required, the latency is higher than posted transaction.
+
+Examples of non posted transactions in PCIe include:
+
+* **Configuration Reads**
+* **Memory Reads**
+* **IO Reads**

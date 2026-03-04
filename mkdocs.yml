@@ -14,6 +14,7 @@ nav:
           - Advanced Error Reporting: pci-features/aer.md
           - Multi-Segment: pci-features/multisegment.md
           - Posted - Non Posted Transactions: pci-features/p-np.md
+          - MSI: pci-features/msi.md
       - CXL: cxl.md
 
 extra_css:
