@@ -1,7 +1,7 @@
 # Error Containment
 # Overview
 
-Consider a two-story house with four bathrooms, where one bathroom is broken. Closing the entire house because of a single unusable bathroom would be absurd. Instead, the faulty bathroom should be isolated until it is repaired, while the rest of the house remains functional.
+Imagine a two-story house with four bathrooms, one of which is broken. It would be absurd to close the entire house because of a single unusable bathroom. Instead, the faulty bathroom should be isolated until it is repaired, while the rest of the house remains functional.
 
 Modern computer systems face a similar problem. Large numbers of interconnected devices work together to provide system functionality. Yet due to single faulty device sometimes the entire system shuts down.
 
