@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://www.layeredcompute.com/x86/smm/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>SM Execution Mode - LayeredCompute</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+  <div class="site-title">
+    LayeredCompute
+    <div class="site-tagline">
+      Multi-Layered Intelligence
+    </div>
+  </div>
+
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">PCIe-Features</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../pci-features/errcontain/" class="dropdown-item">Error Containment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/aer/" class="dropdown-item">Advanced Error Reporting</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/multisegment/" class="dropdown-item">Multi-Segment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/p-np/" class="dropdown-item">Posted - Non Posted Transactions</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/msi/" class="dropdown-item">MSI</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/flit/" class="dropdown-item">Flit Mode</a>
+</li>
+    </ul>
+  </li>
+                                    
+<li>
+    <a href="../../cxl/" class="dropdown-item">CXL</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">x86</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../nonsmm/" class="dropdown-item">Execution Modes</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">SM Execution Mode</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../nonsmm/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#system-management-mode-smm-an-overview" class="nav-link">System Management Mode (SMM): An Overview</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview-of-smm" class="nav-link">Overview of SMM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#system-management-interrupt-smi" class="nav-link">System Management Interrupt (SMI)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#conditions-for-triggering-smi" class="nav-link">Conditions for Triggering SMI</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#priority-of-smm" class="nav-link">Priority of SMM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#smm-elements" class="nav-link">SMM Elements</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#smms-role-in-os-runtime" class="nav-link">SMM's Role in OS Runtime</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#uefibios-role-in-smm" class="nav-link">UEFI/BIOS Role in SMM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#conclusion" class="nav-link">Conclusion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="system-management-mode-smm-an-overview">System Management Mode (SMM): An Overview</h1>
+<h2 id="overview-of-smm">Overview of SMM</h2>
+<h3 id="what-is-smm">What is SMM?</h3>
+<p>System Management Mode is a special-purpose, highly privileged operating mode of x86 processors that runs in a separate, isolated address space called <strong>SMRAM</strong> (System Management RAM). When the processor enters SMM, it suspends all normal execution—including the operating system, hypervisor, and user applications—and executes firmware-provided code with unrestricted access to the system's hardware resources.</p>
+<p>SMM is invisible to the OS; the OS has no native way of detecting that SMM code has executed, other than by observing the time elapsed or indirect side-effects. This "stealth" execution is what makes SMM both powerful and a frequent target for security researchers.</p>
+<h3 id="purpose-of-smm">Purpose of SMM</h3>
+<p>SMM was originally designed to handle platform-specific functionality that needs to be abstracted away from the operating system. Its primary purposes include:</p>
+<ul>
+<li><strong>Power management</strong>: Implementing features like suspend-to-RAM (S3), hibernation (S4), and CPU throttling at the platform level.</li>
+<li><strong>Thermal management</strong>: Responding to thermal sensor events and taking corrective action such as fan speed adjustments or CPU frequency scaling.</li>
+<li><strong>Hardware emulation</strong>: Emulating legacy hardware (e.g., PS/2 keyboard/mouse emulation for USB devices) to maintain backward compatibility.</li>
+<li><strong>System security</strong>: Performing integrity checks, secure boot enforcement, and protecting critical firmware regions.</li>
+<li><strong>Error handling</strong>: Handling correctable and uncorrectable hardware errors, including Machine Check Architecture (MCA) events.</li>
+<li><strong>Platform firmware services</strong>: Providing runtime services such as flash memory updates, TPM communication, and chassis intrusion detection.</li>
+<li><strong>Chipset-specific workarounds</strong>: Fixing silicon errata and implementing platform quirks without requiring OS changes.</li>
+</ul>
+<hr />
+<h2 id="system-management-interrupt-smi">System Management Interrupt (SMI)</h2>
+<h3 id="what-is-smi">What is SMI?</h3>
+<p>The <strong>System Management Interrupt (SMI)</strong> is the mechanism by which the processor enters SMM. It is a non-maskable, high-priority interrupt that causes the CPU to save its current state, switch to SMM, and begin executing the SMI handler located in SMRAM.</p>
+<p>Unlike normal interrupts, SMI cannot be masked or disabled by the operating system. When an SMI is asserted, the CPU completes the current instruction, saves its execution context into a <strong>save state area</strong> within SMRAM, and jumps to the SMI handler entry point.</p>
+<h3 id="types-of-smi">Types of SMI</h3>
+<p>SMIs can generally be categorized into two main types, each with further subtypes:</p>
+<h4 id="1-hardware-triggered-smi">1. Hardware-Triggered SMI</h4>
+<p>These are asserted by hardware events, typically via the chipset's SMI# pin or a dedicated SMI signaling mechanism. Common sources include:</p>
+<ul>
+<li><strong>Thermal SMI</strong>: Triggered when a thermal sensor exceeds a threshold.</li>
+<li><strong>Power button SMI</strong>: Generated when the user presses the power or sleep button.</li>
+<li><strong>Chipset SMI</strong>: Raised by the Platform Controller Hub (PCH) for events like GPIO state changes, periodic timers, or TCO (Total Cost of Ownership) watchdog events.</li>
+<li><strong>Machine Check SMI</strong>: Triggered by uncorrectable hardware errors.</li>
+<li><strong>Legacy USB SMI</strong>: Generated to emulate legacy PS/2 behavior over USB.</li>
+</ul>
+<h4 id="2-software-triggered-smi">2. Software-Triggered SMI</h4>
+<p>Software SMIs are initiated by executing a write to a specific I/O port—typically port <strong>0xB2</strong> (the APM Control Port) on x86 platforms. This is commonly used by:</p>
+<ul>
+<li>UEFI runtime services that need to invoke SMM handlers (e.g., variable services, capsule updates).</li>
+<li>OS-level drivers requesting platform services.</li>
+<li>Firmware utilities performing BIOS updates or configuration changes.</li>
+</ul>
+<p>A write to port 0xB2 with a specific value triggers an SMI, and the SMM handler can dispatch to a specific sub-handler based on the value written.</p>
+<h4 id="3-periodic-timer-smi">3. Periodic / Timer SMI</h4>
+<p>Some platforms configure a periodic SMI—driven by a chipset timer—to perform routine maintenance tasks such as fan speed polling or firmware health monitoring.</p>
+<hr />
+<h2 id="conditions-for-triggering-smi">Conditions for Triggering SMI</h2>
+<p>An SMI can be triggered under a variety of conditions, including:</p>
+<ul>
+<li><strong>Assertion of the SMI# pin</strong> by the chipset or an external controller.</li>
+<li><strong>Write to I/O port 0xB2 (APMC)</strong> by privileged software.</li>
+<li><strong>Thermal threshold events</strong> detected by on-die or platform thermal sensors.</li>
+<li><strong>ACPI events</strong> configured to generate SMIs instead of SCIs (System Control Interrupts).</li>
+<li><strong>TCO timer expiration</strong> indicating a system hang or firmware fault.</li>
+<li><strong>Hardware error events</strong> such as PCIe AER errors or memory correctable errors (depending on configuration).</li>
+<li><strong>Power state transitions</strong> like entering or resuming from S3/S4/S5 states.</li>
+<li><strong>GPIO state changes</strong> configured as SMI sources.</li>
+<li><strong>Chassis intrusion detection</strong> signals.</li>
+<li><strong>SMBus / SPI controller events</strong> in some platform implementations.</li>
+</ul>
+<hr />
+<h2 id="priority-of-smm">Priority of SMM</h2>
+<p>SMM holds the highest execution priority of any normal operating mode on x86 platforms. Its priority characteristics are:</p>
+<ul>
+<li><strong>Higher than Ring 0</strong>: SMM takes precedence over kernel-mode code, including the OS kernel and hypervisors.</li>
+<li><strong>Higher than VMX Root (Ring -1)</strong>: Even hypervisors running in VMX root operation are preempted when an SMI occurs.</li>
+<li><strong>Non-maskable</strong>: Unlike the NMI (which can be deferred in some scenarios), SMI cannot be disabled or masked by any code outside of SMM itself.</li>
+<li><strong>Atomic</strong>: Once entered, SMM execution cannot be interrupted by any other interrupt source, including NMI and further SMIs (which are latched and serviced after RSM).</li>
+</ul>
+<p>Because of this extreme privilege, SMM is sometimes referred to as <strong>"Ring -2"</strong> in the modern CPU privilege model:</p>
+<table>
+<thead>
+<tr>
+<th>Privilege Level</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ring 3</td>
+<td>User-mode applications</td>
+</tr>
+<tr>
+<td>Ring 0</td>
+<td>OS kernel and drivers</td>
+</tr>
+<tr>
+<td>Ring -1</td>
+<td>Hypervisor (VMX Root)</td>
+</tr>
+<tr>
+<td>Ring -2</td>
+<td>System Management Mode (SMM)</td>
+</tr>
+<tr>
+<td>Ring -3</td>
+<td>Intel ME / AMD PSP (out-of-band management engines)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="smm-elements">SMM Elements</h2>
+<p>SMM consists of several key architectural and software components working together:</p>
+<h3 id="1-smram-system-management-ram">1. SMRAM (System Management RAM)</h3>
+<p>SMRAM is a protected region of physical memory reserved exclusively for SMM code and data. Key characteristics include:</p>
+<ul>
+<li><strong>Isolation</strong>: SMRAM is only accessible when the CPU is in SMM; attempts to access it from any other mode return undefined data or trigger a fault.</li>
+<li><strong>Protection via D_LCK and D_OPEN bits</strong>: Chipset registers lock SMRAM after firmware initialization, preventing modification.</li>
+<li><strong>Typical location</strong>: TSEG (Top of Memory Segment) is commonly used; older platforms used the A-segment (ASEG) at 0xA0000.</li>
+<li><strong>Contains</strong>: SMI entry point, SMI handler code, save state area, stack, and SMM drivers.</li>
+</ul>
+<h3 id="2-smi-save-state-area">2. SMI Save State Area</h3>
+<p>When an SMI is received, the CPU automatically saves its context (general-purpose registers, segment registers, control registers, instruction pointer, etc.) into a defined region of SMRAM called the <strong>SMM Save State Map</strong>. The SMI handler may inspect or modify this state, and the <code>RSM</code> instruction restores it upon exit.</p>
+<h3 id="3-smi-entry-point">3. SMI Entry Point</h3>
+<p>The SMI entry point is a fixed address within SMRAM (commonly SMBASE + 0x8000) where the CPU begins execution upon entering SMM. Each logical processor has its own SMBASE, allowing per-core SMI handling.</p>
+<h3 id="4-smi-handler">4. SMI Handler</h3>
+<p>The SMI handler is the firmware-provided code that processes the SMI. It typically:</p>
+<ul>
+<li>Identifies the source of the SMI by reading chipset status registers.</li>
+<li>Dispatches to the appropriate sub-handler.</li>
+<li>Performs any necessary hardware manipulation.</li>
+<li>Acknowledges and clears the SMI source.</li>
+<li>Executes the <code>RSM</code> instruction to return control to the previously running code.</li>
+</ul>
+<h3 id="5-smm-drivers-dispatchers">5. SMM Drivers / Dispatchers</h3>
+<p>In modern UEFI implementations, SMM is built on a modular architecture. Key components include:</p>
+<ul>
+<li><strong>SMM Core</strong>: The central dispatcher that manages SMM driver loading and SMI routing.</li>
+<li><strong>SMM Dispatcher Drivers</strong>: Route specific SMI sources to registered handlers (e.g., SwSmiDispatcher, GpioSmiDispatcher, PeriodicTimerSmiDispatcher).</li>
+<li><strong>SMM Child Handlers</strong>: Individual drivers registered for specific SMI types, performing the actual service logic.</li>
+</ul>
+<h3 id="6-rsm-instruction">6. RSM Instruction</h3>
+<p>The <code>RSM</code> (Resume from System Management Mode) instruction is the only way to exit SMM. It restores the saved CPU state and returns control to the interrupted code, completely transparent to the OS.</p>
+<hr />
+<h2 id="smms-role-in-os-runtime">SMM's Role in OS Runtime</h2>
+<p>SMM runs alongside the OS throughout the system's operational lifetime, not just during boot. Its role at runtime includes:</p>
+<h3 id="transparent-servicing">Transparent Servicing</h3>
+<p>The OS is entirely unaware of SMM execution. When an SMI fires, the OS is frozen mid-instruction and resumes as if nothing happened, aside from the time elapsed. This enables firmware to service platform events without cooperation from the OS.</p>
+<h3 id="handling-legacy-and-platform-specific-operations">Handling Legacy and Platform-Specific Operations</h3>
+<p>Many modern operating systems rely on SMM to handle tasks the OS itself cannot or should not perform, such as:</p>
+<ul>
+<li>Implementing USB legacy emulation for pre-boot environments.</li>
+<li>Managing thermal throttling below the OS's visibility.</li>
+<li>Handling SMBIOS / DMI data updates.</li>
+<li>Executing firmware capsule updates triggered via UEFI runtime services.</li>
+<li>Processing secure variable writes (authenticated variables) for UEFI.</li>
+</ul>
+<h3 id="runtime-firmware-services">Runtime Firmware Services</h3>
+<p>UEFI defines a set of <strong>Runtime Services</strong> (e.g., <code>SetVariable</code>, <code>GetVariable</code>, <code>ResetSystem</code>) that remain available to the OS after ExitBootServices(). Many of these services are implemented by trapping into SMM via a software SMI, because SMM retains access to hardware resources (like SPI flash) that the OS has been isolated from for security reasons.</p>
+<h3 id="security-boundary">Security Boundary</h3>
+<p>Because SMM has access to all system memory and hardware, it acts as a security boundary. The OS must trust that SMM is not compromised. Modern defenses such as <strong>SMM_Code_Chk_En</strong>, <strong>SMRR (SMM Range Registers)</strong>, and <strong>Intel BIOS Guard</strong> help protect SMM's integrity from OS-level attackers.</p>
+<h3 id="performance-considerations">Performance Considerations</h3>
+<p>SMM latency is a well-known concern in real-time systems. Because SMI execution pauses all cores (in some implementations), long SMI handlers can introduce unacceptable jitter for low-latency workloads. Modern firmware aims to keep individual SMIs under 150 microseconds, though this is not always achieved.</p>
+<hr />
+<h2 id="uefibios-role-in-smm">UEFI/BIOS Role in SMM</h2>
+<p>Firmware—whether legacy BIOS or modern UEFI—is responsible for the entire lifecycle of SMM. Without proper firmware setup, SMM cannot function, and improperly configured SMM becomes a major security liability.</p>
+<h3 id="initialization">Initialization</h3>
+<p>During the boot process, UEFI/BIOS performs the following SMM-related tasks:</p>
+<ol>
+<li><strong>Allocate and configure SMRAM</strong>: Reserve the SMRAM region (typically TSEG) and program chipset registers (e.g., <code>SMRAMC</code>, <code>TSEG_BASE</code>, <code>TSEG_LIMIT</code>) to define its boundaries.</li>
+<li><strong>Load the SMI handler and SMM drivers into SMRAM</strong>: The UEFI SMM Core and its modular drivers are loaded during the <strong>DXE (Driver Execution Environment)</strong> phase.</li>
+<li><strong>Relocate SMBASE</strong>: Each logical processor's SMBASE is relocated so that SMI handlers execute from the correct location in SMRAM.</li>
+<li><strong>Register SMI handlers</strong>: SMM drivers register callbacks with the SMM dispatcher for the specific SMI sources they handle.</li>
+<li><strong>Program SMI sources</strong>: Chipset registers are configured to route desired events (thermal, GPIO, timer, etc.) to the SMI mechanism.</li>
+</ol>
+<h3 id="locking-down-smm">Locking Down SMM</h3>
+<p>Before handing control to the OS, firmware must lock SMM to prevent tampering:</p>
+<ul>
+<li><strong>Close SMRAM</strong>: Set the <code>D_OPEN = 0</code> bit, making SMRAM accessible only from SMM.</li>
+<li><strong>Lock SMRAM</strong>: Set the <code>D_LCK = 1</code> bit to prevent further changes to SMRAM configuration until the next reset.</li>
+<li><strong>Program SMRRs</strong>: Configure SMM Range Registers on each CPU to enforce SMRAM access restrictions at the hardware level.</li>
+<li><strong>Enable SMM protections</strong>: Features like SMM_Code_Chk_En, Intel BIOS Guard, and Boot Guard provide additional layers of defense.</li>
+</ul>
+<h3 id="providing-runtime-services">Providing Runtime Services</h3>
+<p>UEFI's runtime services often internally trigger software SMIs to perform their work. For example, <code>SetVariable()</code> writes to NVRAM by invoking a software SMI, because the SPI flash is locked down and only accessible from within SMM.</p>
+<h3 id="security-responsibility">Security Responsibility</h3>
+<p>UEFI/BIOS is solely responsible for the correctness, safety, and security of SMM code. A vulnerability in an SMM driver can lead to catastrophic compromise—such attacks can install persistent rootkits that survive OS reinstallation and are invisible to most security tools. For this reason:</p>
+<ul>
+<li>SMM code should be minimal and thoroughly audited.</li>
+<li>Input from the OS (e.g., arguments passed via communication buffers) must be strictly validated.</li>
+<li>Pointers from the OS should never be dereferenced blindly in SMM (a class of bug known as <strong>"SMM call-out"</strong> or <strong>"confused deputy"</strong> vulnerabilities).</li>
+<li>SMRAM should be locked as early as possible in the boot process.</li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>System Management Mode remains one of the most powerful—and most sensitive—execution environments in modern x86 systems. Originally designed as a convenient abstraction for platform-level features like power and thermal management, it has evolved into a critical component of system firmware, implementing runtime services, emulation, and security enforcement.</p>
+<p>SMM's invisibility to the OS, its highest-in-class privilege, and its deep integration with hardware make it indispensable to modern platforms. At the same time, these same properties make it a high-value target for attackers, which is why modern UEFI/BIOS implementations invest heavily in locking down SMRAM, minimizing the attack surface of the SMI handler, and layering protections such as SMRRs, BIOS Guard, and Boot Guard.</p>
+<p>Understanding SMM—its purpose, its invocation via SMI, its architectural elements, and the firmware's role in managing it—is essential for firmware engineers, OS developers, security researchers, and anyone seeking a complete picture of how modern computers actually work beneath the surface of the operating system.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

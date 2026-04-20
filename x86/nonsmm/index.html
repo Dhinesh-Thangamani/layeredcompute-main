@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://www.layeredcompute.com/x86/nonsmm/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Execution Modes - LayeredCompute</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+  <div class="site-title">
+    LayeredCompute
+    <div class="site-tagline">
+      Multi-Layered Intelligence
+    </div>
+  </div>
+
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">PCIe-Features</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../pci-features/errcontain/" class="dropdown-item">Error Containment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/aer/" class="dropdown-item">Advanced Error Reporting</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/multisegment/" class="dropdown-item">Multi-Segment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/p-np/" class="dropdown-item">Posted - Non Posted Transactions</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/msi/" class="dropdown-item">MSI</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/flit/" class="dropdown-item">Flit Mode</a>
+</li>
+    </ul>
+  </li>
+                                    
+<li>
+    <a href="../../cxl/" class="dropdown-item">CXL</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">x86</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Execution Modes</a>
+</li>
+                                    
+<li>
+    <a href="../smm/" class="dropdown-item">SM Execution Mode</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../cxl/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../smm/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#x86-architecture-execution-modes-a-beginners-guide" class="nav-link">x86 Architecture Execution Modes: A Beginner's Guide</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-multiple-modes-exist" class="nav-link">Why Multiple Modes Exist</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#the-main-execution-modes" class="nav-link">The Main Execution Modes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#how-the-modes-fit-together" class="nav-link">How the Modes Fit Together</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#a-layered-view-of-trust" class="nav-link">A Layered View of Trust</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-this-matters" class="nav-link">Why This Matters</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#conclusion" class="nav-link">Conclusion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="x86-architecture-execution-modes-a-beginners-guide">x86 Architecture Execution Modes: A Beginner's Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>Modern computers are incredibly versatile — they can run everything from simple calculators to complex operating systems, from legacy software written decades ago to cutting-edge applications. How does a single processor handle all of these different workloads? The answer lies in something called <strong>execution modes</strong>.</p>
+<p>Think of execution modes as different "gears" a processor can shift into, each designed for a specific kind of work. Just as a car uses different gears for starting, cruising, and climbing hills, a processor uses different modes to handle different tasks efficiently and safely.</p>
+<p>This article walks through the main execution modes found in today's processors, explaining what each one does and why it exists — without assuming you have a background in low-level computing.</p>
+<hr />
+<h2 id="why-multiple-modes-exist">Why Multiple Modes Exist</h2>
+<p>Before diving into the modes themselves, it helps to understand <em>why</em> processors need them in the first place.</p>
+<p>Over several decades, computing has evolved dramatically. Early computers were simple and could only run one program at a time. As technology advanced, we needed processors that could:</p>
+<ul>
+<li>Run many programs at once without them interfering with each other</li>
+<li>Access larger amounts of memory</li>
+<li>Keep sensitive data safe from untrusted programs</li>
+<li>Run old software alongside new software</li>
+<li>Support virtual machines and cloud computing</li>
+</ul>
+<p>Rather than throwing away older capabilities each time something new was added, processor designers kept the old modes around and added new ones alongside them. The result is a layered system where modern processors can operate in several different ways depending on what kind of software is running.</p>
+<hr />
+<h2 id="the-main-execution-modes">The Main Execution Modes</h2>
+<h3 id="1-the-basic-mode-legacy-compatibility-mode">1. The Basic Mode (Legacy Compatibility Mode)</h3>
+<p>When a computer first powers on, the processor starts in its simplest, most basic mode. This mode was designed in the very early days of personal computing and has been preserved to this day for compatibility reasons.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Very limited memory access (only about 1 megabyte).</li>
+<li>No protection between programs — any program can access anything.</li>
+<li>Only one program can run at a time.</li>
+<li>No concept of "users" or "permissions."</li>
+</ul>
+<p><strong>What it's used for today:</strong></p>
+<ul>
+<li>The first moments after you press the power button, before the operating system takes over.</li>
+<li>Starting up the system firmware (the software built into your computer's motherboard).</li>
+</ul>
+<p>Think of this as the processor "waking up" — it always starts in this simple state before transitioning into more advanced modes.</p>
+<h3 id="2-the-standard-mode-multitasking-mode">2. The Standard Mode (Multitasking Mode)</h3>
+<p>This mode was introduced to support modern operating systems that run many programs simultaneously. It's the mode that powered most desktop and laptop computers for many years.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Access to much more memory (several gigabytes).</li>
+<li><strong>Memory protection</strong> — programs are kept separate from each other, so a crash in one program doesn't bring down the whole system.</li>
+<li><strong>Privilege separation</strong> — the operating system has more authority than regular applications, preventing applications from doing things they shouldn't.</li>
+<li><strong>Virtual memory</strong> — each program gets its own "view" of memory, making it easier to manage resources.</li>
+<li>Support for running many programs at once.</li>
+</ul>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Running 32-bit operating systems and applications.</li>
+<li>Providing the safety and multitasking features we take for granted today.</li>
+</ul>
+<p>This mode is where the computer transitions to when the operating system starts up. It's a huge leap forward from the basic mode — suddenly, the computer can do many things at once without programs stepping on each other's toes.</p>
+<h3 id="3-the-legacy-compatibility-sub-mode">3. The Legacy Compatibility Sub-Mode</h3>
+<p>Sometimes, a modern computer needs to run very old software that was written for the basic mode. Rather than forcing users to reboot into an old mode, processors offer a way to run old software inside the standard mode — safely contained, like a sandbox.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Old software <em>thinks</em> it's running on an old system.</li>
+<li>The operating system supervises everything it does.</li>
+<li>If the old software tries anything risky, the operating system intervenes.</li>
+</ul>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Running legacy software under older operating systems.</li>
+<li>Increasingly rare today, as most legacy software now runs through dedicated emulators instead.</li>
+</ul>
+<p>Think of this as a "pretend old computer" running safely inside a modern one.</p>
+<h3 id="4-system-management-mode-behind-the-scenes-mode">4. System Management Mode (Behind-the-Scenes Mode)</h3>
+<p>This is a special mode used by the computer's firmware — the low-level software built into the hardware. It runs completely invisibly to the operating system and applications.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Runs without the operating system's knowledge.</li>
+<li>Has access to everything in the computer.</li>
+<li>Triggered automatically by specific hardware events.</li>
+<li>Returns control to whatever was running before, as if nothing happened.</li>
+</ul>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Managing power (for example, suspending the computer when you close the lid).</li>
+<li>Controlling cooling fans and responding to temperature changes.</li>
+<li>Handling hardware errors gracefully.</li>
+<li>Performing firmware updates.</li>
+<li>Supporting certain legacy hardware features.</li>
+</ul>
+<p>Think of this mode as the computer's "janitor" — quietly doing important maintenance work in the background that you never see.</p>
+<h3 id="5-the-modern-64-bit-mode">5. The Modern 64-Bit Mode</h3>
+<p>This is the mode that powers virtually all modern computers today. It was introduced to overcome the memory and performance limitations of earlier modes.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Access to enormous amounts of memory — far more than older modes could handle.</li>
+<li>More efficient handling of modern workloads.</li>
+<li>Streamlined design that removes many legacy complications.</li>
+<li>Can still run older 32-bit software in a special compatibility sub-mode.</li>
+</ul>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Running modern operating systems like current versions of Windows, macOS, and Linux.</li>
+<li>Handling memory-intensive applications like video editing, scientific computing, gaming, and AI workloads.</li>
+<li>Supporting large databases and server workloads.</li>
+</ul>
+<p>When you buy a new computer today, this is the mode it primarily operates in. It represents the current state of the art in general-purpose computing.</p>
+<h4 id="the-compatibility-corner">The Compatibility Corner</h4>
+<p>Within this modern mode, there's a sub-arrangement that allows older 32-bit applications to run alongside 64-bit ones. This is why your modern computer can still run software written years ago — the processor can switch seamlessly between handling modern and older applications.</p>
+<h3 id="6-virtualization-modes-the-computer-inside-a-computer-mode">6. Virtualization Modes (The Computer-Inside-a-Computer Mode)</h3>
+<p>Virtualization lets one physical computer behave like many separate computers. This is the technology that powers cloud computing, data centers, and tools that let you run one operating system inside another.</p>
+<p>To support this efficiently, processors have special modes:</p>
+<p><strong>The Host Mode</strong></p>
+<p>This is where the "manager" software runs — the program that creates and oversees the virtual computers. It has the authority to create, start, pause, and stop virtual machines.</p>
+<p><strong>The Guest Mode</strong></p>
+<p>This is where the virtual computers themselves run. Each guest <em>thinks</em> it's running on its own dedicated hardware, but the host mode is quietly supervising everything. When a guest tries to do something sensitive, control automatically switches back to the host mode, which decides how to handle the request.</p>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Cloud services (when you use services like AWS, Azure, or Google Cloud, virtualization is working behind the scenes).</li>
+<li>Running one operating system inside another (like running Linux on a Windows computer).</li>
+<li>Isolating applications for security.</li>
+<li>Consolidating multiple servers onto fewer physical machines.</li>
+</ul>
+<p>Think of it as an apartment building: the host mode is the building manager, and each guest mode is a tenant who has their own apartment but is still subject to the building's rules.</p>
+<h3 id="7-secure-enclave-mode-the-vault-mode">7. Secure Enclave Mode (The Vault Mode)</h3>
+<p>Modern processors include special modes designed to protect sensitive data — even from the operating system itself. This is useful when you want to process something highly confidential and don't fully trust everything running on the computer.</p>
+<p><strong>Key characteristics:</strong></p>
+<ul>
+<li>Creates a protected "bubble" within the processor.</li>
+<li>Data and code inside this bubble are encrypted and inaccessible to outside software.</li>
+<li>Even the operating system cannot peek inside.</li>
+</ul>
+<p><strong>What it's used for:</strong></p>
+<ul>
+<li>Protecting cryptographic keys.</li>
+<li>Confidential computing in the cloud.</li>
+<li>Digital rights management.</li>
+<li>Handling sensitive financial or medical data.</li>
+</ul>
+<p>Think of this mode as a bank vault inside the computer — even the people who own the bank can't just walk in and look at what's inside.</p>
+<hr />
+<h2 id="how-the-modes-fit-together">How the Modes Fit Together</h2>
+<p>At any given moment, a modern computer is using several of these modes in coordination:</p>
+<ul>
+<li>The <strong>firmware</strong> uses the basic mode briefly at startup, then relies on the behind-the-scenes mode for ongoing maintenance.</li>
+<li>The <strong>operating system</strong> runs in the modern 64-bit mode, managing all the applications.</li>
+<li><strong>Applications</strong> run within the modern mode, with older apps using the compatibility corner.</li>
+<li><strong>Virtualization software</strong>, when present, uses the host and guest modes to run other operating systems.</li>
+<li><strong>Secure applications</strong> may use the vault mode to protect sensitive operations.</li>
+</ul>
+<p>The processor constantly and invisibly switches between these modes — sometimes thousands of times per second — without you ever noticing. It's one of the reasons modern computers feel so seamless despite doing incredibly complex work underneath.</p>
+<hr />
+<h2 id="a-layered-view-of-trust">A Layered View of Trust</h2>
+<p>One useful way to think about these modes is in terms of <em>who trusts whom</em>. Some modes are more privileged than others, meaning they have more authority over the machine:</p>
+<ul>
+<li>The <strong>most privileged</strong> layers are the firmware and the behind-the-scenes maintenance mode. They have unrestricted access to everything.</li>
+<li><strong>Virtualization managers</strong> sit just below that, overseeing virtual machines.</li>
+<li><strong>Operating systems</strong> sit below the virtualization layer, managing applications.</li>
+<li><strong>Applications</strong> sit at the top layer, with the least authority — they can only do what the operating system allows.</li>
+</ul>
+<p>This layered structure is what makes modern computing both powerful and safe. A misbehaving application can't crash the operating system. A compromised operating system (in a virtualized environment) can't affect other virtual machines. And sensitive data in the vault mode stays protected even if everything else is compromised.</p>
+<hr />
+<h2 id="why-this-matters">Why This Matters</h2>
+<p>You might wonder why any of this matters to a regular user or a newly graduated engineer who doesn't work on processors directly. Here's why understanding these modes is valuable:</p>
+<ul>
+<li><strong>It explains compatibility.</strong> Ever wondered how your modern laptop can still run software from the 1990s? Execution modes are a big part of the answer.</li>
+<li><strong>It explains security.</strong> Features like secure boot, trusted execution, and virtualization-based security all rely on these modes.</li>
+<li><strong>It explains performance.</strong> Understanding that the processor is juggling multiple modes helps explain why certain operations are faster than others.</li>
+<li><strong>It demystifies the cloud.</strong> Virtualization modes are the foundation of modern cloud computing.</li>
+<li><strong>It provides context.</strong> Whether you work in software, hardware, security, or IT, knowing how the processor organizes its work gives you a richer understanding of how computers really function.</li>
+</ul>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>The different execution modes in modern processors are like the different costumes an actor wears for different roles. Each mode is optimized for a specific kind of work — from starting up the computer, to running applications, to managing virtual machines, to protecting sensitive data.</p>
+<p>What makes modern processors remarkable isn't any single one of these modes, but the way they all work together seamlessly. The processor can be running a modern application one microsecond, performing behind-the-scenes maintenance the next, and supervising a virtual machine the microsecond after that — all without the user ever being aware of the complexity underneath.</p>
+<p>Understanding these modes gives you a window into how your computer really works — and an appreciation for the decades of engineering that make everyday computing feel so effortless.</p>
+<hr />
+<p>Want me to save this as a markdown file or a Word document, or add diagrams to help visualize how the modes relate to each other?</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
