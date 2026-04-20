@@ -18,6 +18,7 @@ nav:
           - Flit Mode: pci-features/flit.md
       - CXL: cxl.md
   - x86:
+      - Execution Modes: x86/nonsmm.md
       - SM Execution Mode: x86/smm.md
 extra_css:
   - stylesheets/extra.css
