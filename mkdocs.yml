@@ -20,5 +20,6 @@ nav:
   - x86:
       - Execution Modes: x86/nonsmm.md
       - SM Execution Mode: x86/smm.md
+      - SMM-nonSMM Data Transfer: x86/smm-nonsmm-data-transfer.md
 extra_css:
   - stylesheets/extra.css
