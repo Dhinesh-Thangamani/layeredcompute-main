@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://www.layeredcompute.com/x86/smm-nonsmm-data-transfer/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>SMM-nonSMM Data Transfer - LayeredCompute</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+  <div class="site-title">
+    LayeredCompute
+    <div class="site-tagline">
+      Multi-Layered Intelligence
+    </div>
+  </div>
+
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">PCIe-Features</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../pci-features/errcontain/" class="dropdown-item">Error Containment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/aer/" class="dropdown-item">Advanced Error Reporting</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/multisegment/" class="dropdown-item">Multi-Segment</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/p-np/" class="dropdown-item">Posted - Non Posted Transactions</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/msi/" class="dropdown-item">MSI</a>
+</li>
+            
+<li>
+    <a href="../../pci-features/flit/" class="dropdown-item">Flit Mode</a>
+</li>
+    </ul>
+  </li>
+                                    
+<li>
+    <a href="../../cxl/" class="dropdown-item">CXL</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">x86</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../nonsmm/" class="dropdown-item">Execution Modes</a>
+</li>
+                                    
+<li>
+    <a href="../smm/" class="dropdown-item">SM Execution Mode</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">SMM-nonSMM Data Transfer</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../smm/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#data-transfer-between-non-smm-and-smm-mode" class="nav-link">Data Transfer Between Non-SMM and SMM Mode</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#why-non-smm-smm-data-transfer-is-needed" class="nav-link">Why Non-SMM ↔ SMM Data Transfer Is Needed</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#methods-of-data-communication" class="nav-link">Methods of Data Communication</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#comparison-summary" class="nav-link">Comparison Summary</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#security-considerations" class="nav-link">Security Considerations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#conclusion" class="nav-link">Conclusion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="data-transfer-between-non-smm-and-smm-mode">Data Transfer Between Non-SMM and SMM Mode</h1>
+<h2 id="overview">Overview</h2>
+<p>System Management Mode (SMM) executes in a <strong>physically isolated address space called SMRAM</strong>, which is inaccessible from any non-SMM context (Ring 3, Ring 0, or even Ring -1 hypervisors). This isolation is what gives SMM its security guarantees, but it also creates a fundamental problem:</p>
+<blockquote>
+<p>How does non-SMM software (the OS kernel, a UEFI driver, a runtime service caller) hand data to an SMI handler — and receive results back — when the two sides cannot see each other's memory directly?</p>
+</blockquote>
+<p>The answer is a small, well-defined set of <strong>cross-privilege-boundary communication mechanisms</strong>. Each mechanism uses a shared piece of memory (reachable from non-SMM) or CPU state (registers in the SMM save state area) as a <em>mailbox</em>, and uses a <strong>software SMI</strong> as the doorbell that wakes SMM up to read it.</p>
+<p>This page describes why the communication is needed, the two canonical methods used by every modern UEFI platform, and other less-common variants.</p>
+<hr />
+<h2 id="why-non-smm-smm-data-transfer-is-needed">Why Non-SMM ↔ SMM Data Transfer Is Needed</h2>
+<p>SMM owns a number of resources and services that the OS and UEFI runtime environment cannot touch directly. Whenever non-SMM code needs one of those services, it has to ask SMM to do the work on its behalf. Typical reasons include:</p>
+<ul>
+<li><strong>SPI flash access</strong> — The SPI controller is locked down after boot so that only SMM can write to it. <code>SetVariable()</code>, capsule updates, and BIOS updates all need to cross into SMM.</li>
+<li><strong>Authenticated UEFI variables</strong> — Variables with <code>EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS</code> or <code>EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS</code> are validated and stored by SMM-resident code.</li>
+<li><strong>TPM / security coprocessor mediation</strong> — Some platforms funnel TPM command submission through SMM for integrity reasons.</li>
+<li><strong>Platform configuration</strong> — Reading or writing protected chipset registers, Intel ME / AMD PSP mailboxes, or locked-down MMIO ranges.</li>
+<li><strong>RAS and error logging</strong> — Machine-check banks, PCIe AER logs, and memory error records are often harvested in SMM and exposed to the OS.</li>
+<li><strong>Capsule / firmware update staging</strong> — The OS hands a capsule image to firmware; SMM validates and applies it.</li>
+<li><strong>Legacy emulation hooks</strong> — USB legacy, PS/2 emulation, and similar quirks.</li>
+</ul>
+<p>In every case, the caller must:</p>
+<ol>
+<li>Place <strong>input data</strong> somewhere SMM can read it.</li>
+<li>Trigger an <strong>SMI</strong> so SMM actually runs.</li>
+<li>Let SMM write <strong>output data</strong> back to a location the caller can read.</li>
+<li>Resume execution after <code>RSM</code>.</li>
+</ol>
+<p>The methods below are the practical realizations of that pattern.</p>
+<hr />
+<h2 id="methods-of-data-communication">Methods of Data Communication</h2>
+<h3 id="method-1-software-smi-with-nvs-runtime-data-buffer">Method 1 — Software SMI with NVS / Runtime Data Buffer</h3>
+<p>This is the <strong>classic, low-level mechanism</strong> and is still the foundation of most vendor-specific SMI services. It predates the UEFI PI SMM specification and is used whenever a piece of OS-level code (ACPI, a BIOS utility, a Windows/Linux driver) needs to talk to SMM without the full UEFI PI infrastructure being available.</p>
+<h4 id="how-it-works">How it works</h4>
+<ol>
+<li>During boot, the firmware allocates a buffer in <strong>ACPI NVS memory</strong> (<code>EfiACPIMemoryNVS</code>) or <strong>Runtime Services Data</strong> (<code>EfiRuntimeServicesData</code>).<ul>
+<li>These memory types are preserved across <code>ExitBootServices()</code> and are reported to the OS so the OS will not reclaim them.</li>
+<li>The physical address of the buffer is published — commonly through an <strong>ACPI OperationRegion</strong> in the DSDT/SSDT, a <strong>SMBIOS OEM table</strong>, or a fixed NVS pointer in a UEFI variable.</li>
+</ul>
+</li>
+<li>The caller (OS driver, ACPI ASL, or a UEFI module) writes its <strong>command code</strong> and <strong>input parameters</strong> into the buffer at the agreed-upon offsets.</li>
+<li>The caller writes a specific <strong>command value to I/O port 0xB2</strong> (the APM Control Port, APMC). This generates a <strong>software SMI</strong>.</li>
+<li>The CPU enters SMM. The SwSmi dispatcher inspects the value written to 0xB2 (and sometimes 0xB3 for a sub-function) and dispatches to the registered handler.</li>
+<li>The SMM handler:<ul>
+<li>Reads the NVS / runtime buffer.</li>
+<li><strong>Validates</strong> every field (length, pointers, ranges — see <a href="#security-considerations">Security Considerations</a>).</li>
+<li>Performs the requested work.</li>
+<li>Writes the result (status code + output data) back into the same buffer.</li>
+</ul>
+</li>
+<li><code>RSM</code> returns to the caller, which reads the result from the buffer.</li>
+</ol>
+<h4 id="typical-layout-of-the-shared-buffer">Typical layout of the shared buffer</h4>
+<pre><code class="language-c">typedef struct {
+    UINT32  Signature;      // e.g. 'SMIC'
+    UINT32  Command;        // Sub-function selector
+    UINT32  Status;         // Filled in by SMM on return
+    UINT32  DataSize;       // Size of the payload that follows
+    UINT8   Data[256];      // In/out payload
+} OEM_SMI_NVS_BUFFER;
+</code></pre>
+<h4 id="acpi-driven-example-asl-sketch">ACPI-driven example (ASL sketch)</h4>
+<pre><code class="language-asl">OperationRegion (SMIB, SystemMemory, 0x7F000000, 0x100) // NVS buffer
+Field (SMIB, DWordAcc, NoLock, Preserve) {
+    CMD,  32,
+    STAT, 32,
+    DAT0, 32,
+    DAT1, 32
+}
+OperationRegion (APMP, SystemIO, 0xB2, 2)
+Field (APMP, ByteAcc, NoLock, Preserve) {
+    APMC, 8,
+    APMS, 8
+}
+
+Method (DOIT, 1) {
+    Store (0x1234, CMD)       // Write command
+    Store (Arg0,  DAT0)       // Write parameter
+    Store (0xA0,  APMC)       // Trigger SW SMI
+    Return (STAT)             // Read status filled in by SMM
+}
+</code></pre>
+<h4 id="characteristics">Characteristics</h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trigger</td>
+<td>Write to I/O port 0xB2 (APMC)</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>Pre-allocated NVS / Runtime buffer at a known physical address</td>
+</tr>
+<tr>
+<td>Consumers</td>
+<td>ACPI ASL, legacy OS drivers, pre-UEFI utilities</td>
+</tr>
+<tr>
+<td>Spec</td>
+<td>Vendor-defined / de-facto standard</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Thermal control, BIOS OEM services, legacy capsule</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strengths">Strengths</h4>
+<ul>
+<li>Works from any context that can execute an I/O port write — including 16-bit code, ACPI ASL, and non-UEFI OSes.</li>
+<li>Zero infrastructure cost; needs only a buffer and an SMI handler.</li>
+<li>Extremely fast — a single OUT instruction.</li>
+</ul>
+<h4 id="weaknesses">Weaknesses</h4>
+<ul>
+<li><strong>No standard schema</strong>. Every OEM rolls its own command table and buffer layout, so portability is poor.</li>
+<li><strong>Fixed buffer size</strong> set at boot — hard to change without reallocating.</li>
+<li><strong>Trust boundary is fragile</strong>. The buffer lives in OS-writable memory, so SMM must treat every byte as hostile input and validate obsessively.</li>
+<li>Port 0xB2 is a <strong>global resource</strong> — all software SMIs collide there, forcing sub-function multiplexing.</li>
+</ul>
+<hr />
+<h3 id="method-2-smm-communicate-service-efi_mm_communication_protocol">Method 2 — SMM Communicate Service (<code>EFI_MM_COMMUNICATION_PROTOCOL</code>)</h3>
+<p>This is the <strong>UEFI-standardized mechanism</strong> defined by the Platform Initialization (PI) specification, volume 4. It replaces ad-hoc OEM SMI buffers with a typed, discoverable, handler-addressed RPC framework and is what modern UEFI drivers and OSes should use.</p>
+<p>It is exposed in two forms:</p>
+<ul>
+<li>Boot-time / DXE: <code>EFI_MM_COMMUNICATION_PROTOCOL</code> (formerly <code>EFI_SMM_COMMUNICATION_PROTOCOL</code>).</li>
+<li>Runtime: a <strong>configuration table</strong> (<code>EFI_MM_COMMUNICATION_TABLE</code> / <code>gEfiSmmCommunicationTableGuid</code>) pointing to a runtime-safe communicate buffer, so that OS-present UEFI runtime services (e.g. <code>SetVariable</code>) can still reach SMM after <code>ExitBootServices</code>.</li>
+</ul>
+<h4 id="how-it-works_1">How it works</h4>
+<ol>
+<li>Firmware allocates a <strong>communication buffer</strong> in runtime memory and publishes its address via the MM communication configuration table. The caller can also allocate its own buffer from <code>EfiRuntimeServicesData</code>.</li>
+<li>
+<p>The caller fills in an <code>EFI_MM_COMMUNICATE_HEADER</code>:</p>
+<p><code>c
+typedef struct {
+    EFI_GUID  HeaderGuid;      // Identifies the target SMM handler
+    UINTN     MessageLength;   // Size of Data[] that follows
+    UINT8     Data[ANYSIZE];   // Handler-specific payload
+} EFI_MM_COMMUNICATE_HEADER;</code></p>
+<ul>
+<li><code>HeaderGuid</code> is the GUID the target handler registered itself under via <code>gMmst-&gt;MmiHandlerRegister()</code> / <code>SmiHandlerRegister()</code>.</li>
+<li><code>Data[]</code> is the payload — its format is defined by the handler whose GUID is in <code>HeaderGuid</code>.</li>
+<li>The caller invokes <code>Communicate()</code>:</li>
+</ul>
+<p><code>c
+Status = MmCommunication-&gt;Communicate (
+           MmCommunication,   // Protocol instance
+           CommBuffer,        // Pointer to the header above
+           &amp;CommBufferSize    // In/out size
+           );</code></p>
+</li>
+<li>
+<p>The protocol implementation writes the buffer's physical address into a well-known location, then <strong>triggers a software SMI</strong> (the transport is still port 0xB2 under the hood on x86 — the communicate service is a layer <em>on top</em> of SW SMI, not a replacement for the hardware mechanism).</p>
+</li>
+<li>
+<p>The SMM Core receives the SMI, walks the registered MMI handlers, and dispatches to the one whose GUID matches <code>HeaderGuid</code>. The handler signature is:</p>
+<p><code>c
+EFI_STATUS
+(EFIAPI *EFI_MM_HANDLER_ENTRY_POINT) (
+    IN     EFI_HANDLE  DispatchHandle,
+    IN     CONST VOID  *Context      OPTIONAL,
+    IN OUT VOID        *CommBuffer   OPTIONAL,
+    IN OUT UINTN       *CommBufferSize OPTIONAL
+);</code></p>
+</li>
+<li>
+<p>The handler validates the buffer, performs the work, and writes the response in place. <code>Communicate()</code> returns and the caller reads the result.</p>
+</li>
+</ol>
+<h4 id="runtime-variant-post-exitbootservices">Runtime variant (post-<code>ExitBootServices</code>)</h4>
+<p>The DXE protocol is no longer callable once boot services exit. Instead, firmware publishes <code>gEfiSmmCommunicationTableGuid</code> in the UEFI system configuration table, whose structure is:</p>
+<pre><code class="language-c">typedef struct {
+    EFI_PHYSICAL_ADDRESS  SmmCommunicationBuffer;  // Pre-reserved runtime buffer
+    UINT64                NumberOfEntries;
+    EFI_MM_COMMUNICATE_HEADER_DESCRIPTOR Entries[];
+} EFI_MM_COMMUNICATION_TABLE;
+</code></pre>
+<p>UEFI runtime services such as <strong>Variable Services</strong> use this table internally: <code>SetVariable()</code> after ExitBootServices packages the request into an <code>EFI_MM_COMMUNICATE_HEADER</code> with the SMM variable handler's GUID, drops it in the runtime communicate buffer, and triggers the SW SMI. The SMM-resident variable driver performs the authenticated write to SPI flash and returns status.</p>
+<h4 id="characteristics_1">Characteristics</h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trigger</td>
+<td>SW SMI (still port 0xB2), wrapped by the protocol</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td><code>EFI_MM_COMMUNICATE_HEADER</code> in runtime memory</td>
+</tr>
+<tr>
+<td>Routing</td>
+<td>GUID-based — handler chosen by <code>HeaderGuid</code></td>
+</tr>
+<tr>
+<td>Spec</td>
+<td>UEFI PI Spec, Volume 4 (MM)</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>UEFI variable services, capsule update, SMM RAS, OS-to-SMM RPC</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strengths_1">Strengths</h4>
+<ul>
+<li><strong>Standard and portable</strong> across firmware vendors.</li>
+<li><strong>Typed, GUID-addressed dispatch</strong> — no fighting over port 0xB2 sub-functions.</li>
+<li><strong>Discoverable</strong> via protocol database (boot) or configuration table (runtime).</li>
+<li>Scales to many SMM services without a central command-number registry.</li>
+</ul>
+<h4 id="weaknesses_1">Weaknesses</h4>
+<ul>
+<li>Still requires strict input validation in SMM — the comm buffer is OS-writable memory.</li>
+<li>Slightly more overhead than raw port 0xB2 due to dispatch/lookup.</li>
+<li>Requires UEFI PI MM infrastructure; not available to legacy non-UEFI OSes.</li>
+</ul>
+<hr />
+<h3 id="method-3-other-less-common-mechanisms">Method 3 — Other / Less-Common Mechanisms</h3>
+<p>Beyond the two canonical methods, several other transports are used in specific situations. They are either lower-level building blocks or special-purpose variants.</p>
+<h4 id="3a-register-based-parameter-passing-via-the-smm-save-state">3a. Register-based parameter passing via the SMM Save State</h4>
+<p>When an SMI is taken, the CPU saves GPRs, segment registers, RIP, RFLAGS, and more into the <strong>SMM Save State Map</strong> in SMRAM. The SMI handler is allowed to read — and in many implementations modify — this save state.</p>
+<p>This means the caller can pass small amounts of data by putting them in registers (RAX, RBX, RCX, RDX…) immediately before the OUT to 0xB2. The SMI handler reads those register images from the save state.</p>
+<ul>
+<li>Used heavily by Intel <strong>EFI_SMM_CPU_PROTOCOL</strong> (<code>ReadSaveState</code> / <code>WriteSaveState</code>).</li>
+<li>Good for tiny requests (a command code, a handle, a status).</li>
+<li>Limited to register-sized payloads — anything larger still needs a buffer.</li>
+<li>Used internally by UEFI variable services: the SW SMI value in RAX is the command, while the buffer address is read from a published pointer.</li>
+</ul>
+<h4 id="3b-msr-cpuid-based-side-channels">3b. MSR / CPUID-based side channels</h4>
+<p>Some chipset- or CPU-specific flows use model-specific registers or special CPUID leaves to hand short parameters across the SMM boundary (e.g., Intel BIOS Guard, some debug and RAS paths). These are vendor-specific and not part of any portable API.</p>
+<h4 id="3c-hardware-mailboxes-pch-me-psp">3c. Hardware mailboxes (PCH / ME / PSP)</h4>
+<p>Certain services are implemented as hardware mailboxes backed by platform firmware (e.g. Intel ME HECI, AMD PSP mailbox, PCH SMBus controllers). SMM may act as a forwarder: non-SMM software calls SMM via Method 1 or Method 2, and SMM then marshals the real request into the hardware mailbox. From the OS's point of view the transport is still a SW SMI; the mailbox is just the back-end.</p>
+<h4 id="3d-efi_mm_communication2_protocol">3d. <code>EFI_MM_COMMUNICATION2_PROTOCOL</code></h4>
+<p>A newer revision of the communicate protocol that accepts both a physical and a virtual address for the comm buffer, simplifying callers that run after <code>SetVirtualAddressMap()</code>. Semantically identical to Method 2 — just a nicer calling convention.</p>
+<h4 id="3e-periodic-synchronous-smi-with-pre-agreed-memory">3e. Periodic / synchronous SMI with pre-agreed memory</h4>
+<p>For telemetry-style flows (e.g., a periodic chipset SMI polling the ACPI NVS region for pending work), the non-SMM side just writes to a flag in NVS and lets the next periodic SMI discover it. No explicit trigger is needed. This is a polled variant of Method 1.</p>
+<h4 id="3f-hardware-triggered-smi-carrying-implicit-data">3f. Hardware-triggered SMI carrying implicit data</h4>
+<p>In flows like thermal, GPIO, or PCIe error SMIs, the "data" is the <strong>hardware state itself</strong> — status bits in chipset registers — not a software-prepared buffer. The SMI handler reads the state, acts, and may publish a result to the OS via ACPI notify or a log in NVS. This is technically bidirectional communication, even though nothing was "handed in" through a buffer.</p>
+<hr />
+<h2 id="comparison-summary">Comparison Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Method 1: SW SMI + NVS/Runtime Buffer</th>
+<th>Method 2: SMM Communicate</th>
+<th>Method 3: Save-State / MSR / HW Mailbox</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standardized?</td>
+<td>No — OEM-specific</td>
+<td>Yes — UEFI PI Vol. 4</td>
+<td>No — platform-specific</td>
+</tr>
+<tr>
+<td>Trigger</td>
+<td><code>OUT 0xB2, cmd</code></td>
+<td><code>Communicate()</code> wrapping a SW SMI</td>
+<td>Varies (OUT, WRMSR, MMIO doorbell)</td>
+</tr>
+<tr>
+<td>Routing</td>
+<td>Command value at port 0xB2/0xB3</td>
+<td>GUID in <code>EFI_MM_COMMUNICATE_HEADER</code></td>
+<td>Register contents / MSR / chipset state</td>
+</tr>
+<tr>
+<td>Buffer type</td>
+<td><code>EfiACPIMemoryNVS</code> or <code>EfiRuntimeServicesData</code></td>
+<td><code>EfiRuntimeServicesData</code> via MM comm table</td>
+<td>Save state area / registers / HW buffer</td>
+</tr>
+<tr>
+<td>Callable from legacy OS / ASL</td>
+<td>Yes</td>
+<td>No (needs UEFI PI)</td>
+<td>Partially</td>
+</tr>
+<tr>
+<td>Typical payload size</td>
+<td>Up to buffer size (KB-range)</td>
+<td>Up to comm buffer size</td>
+<td>Tens of bytes</td>
+</tr>
+<tr>
+<td>Discoverability</td>
+<td>Ad-hoc (ACPI OpRegion, SMBIOS)</td>
+<td>Protocol DB or config table</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Legacy, OEM services, ACPI-to-SMM</td>
+<td>UEFI variable, capsule, modern RPC</td>
+<td>Tiny control paths, HW offload</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="security-considerations">Security Considerations</h2>
+<p>Regardless of which method is used, <strong>every byte coming from non-SMM is hostile</strong> as far as SMM is concerned. Common failure modes that have produced real CVEs:</p>
+<ul>
+<li><strong>Unvalidated pointers</strong>: The comm buffer contains a pointer into OS memory; SMM dereferences it without checking it lies outside SMRAM, allowing an attacker to trick SMM into overwriting its own code — the classic <strong>SMM call-out / confused-deputy</strong> bug.</li>
+<li><strong>TOCTOU races</strong>: SMM checks a length field, then re-reads it later. Because the buffer is OS-writable while SMM runs on other cores (or between SMIs), the length can change. Fix: copy the entire request into SMRAM first, then validate.</li>
+<li><strong>Integer overflow in length/offset fields</strong> causing out-of-bounds reads or writes.</li>
+<li><strong>Missing origin checks</strong> on the comm buffer address — the buffer must be verified to lie <em>entirely outside SMRAM</em> and in expected memory types.</li>
+</ul>
+<p>Mitigations every SMI handler should implement:</p>
+<ol>
+<li>Copy the request into SMRAM-local storage before validating.</li>
+<li>Verify <code>CommBuffer</code> and <code>CommBuffer + CommBufferSize</code> fall outside SMRAM and inside allowed memory types (use <code>SmmIsBufferOutsideSmmValid()</code> in EDK II).</li>
+<li>Reject pointers embedded in the payload unless they are bounded and re-validated.</li>
+<li>Use hardware features (SMM_Code_Chk_En, SMRR, SMM page tables with NX) to contain handler bugs.</li>
+<li>Keep the handler small and auditable — every byte of SMM code runs at Ring -2.</li>
+</ol>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>Non-SMM and SMM communicate through a very small set of patterns, all of which reduce to: <strong>"shared memory + software SMI doorbell."</strong> The two production-relevant methods are the legacy <strong>SW SMI with NVS / runtime buffer</strong> — flexible and usable from any environment including ACPI and legacy OSes — and the standardized <strong>SMM Communicate service</strong> — typed, GUID-dispatched, and the foundation of modern UEFI runtime services like authenticated variable writes and capsule updates. A handful of lower-level variants (save-state registers, MSR side channels, hardware mailboxes, MM Communicate v2, periodic SMI) fill in the remaining gaps, usually as building blocks rather than direct OS-to-SMM APIs.</p>
+<p>The common thread across all of them is the trust model: non-SMM writes data into a buffer it controls, SMM is summoned, SMM treats the buffer as adversarial input, does the work, and writes a response in place. Getting that validation right is the single most important thing an SMM driver does — which is why so many historical SMM vulnerabilities trace back to sloppy handling of exactly these communication buffers.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
