@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        <link rel="canonical" href="https://www.layeredcompute.com/pci-features/msi/">
+        <link rel="canonical" href="https://www.layeredcompute.com/x86/wdt/">
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>MSI - LayeredCompute</title>
+        <title>Watchdog Timer - LayeredCompute</title>
         <link href="../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../css/fontawesome.min.css" rel="stylesheet">
         <link href="../../css/brands.min.css" rel="stylesheet">
@@ -45,7 +45,7 @@
                                 <a href="../.." class="nav-link">Home</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Bus Interface</a>
                                 <ul class="dropdown-menu">
                                     
   <li class="dropdown-submenu">
@@ -53,27 +53,27 @@
     <ul class="dropdown-menu">
             
 <li>
-    <a href="../errcontain/" class="dropdown-item">Error Containment</a>
+    <a href="../../pci-features/errcontain/" class="dropdown-item">Error Containment</a>
 </li>
             
 <li>
-    <a href="../aer/" class="dropdown-item">Advanced Error Reporting</a>
+    <a href="../../pci-features/aer/" class="dropdown-item">Advanced Error Reporting</a>
 </li>
             
 <li>
-    <a href="../multisegment/" class="dropdown-item">Multi-Segment</a>
+    <a href="../../pci-features/multisegment/" class="dropdown-item">Multi-Segment</a>
 </li>
             
 <li>
-    <a href="../p-np/" class="dropdown-item">Posted - Non Posted Transactions</a>
+    <a href="../../pci-features/p-np/" class="dropdown-item">Posted - Non Posted Transactions</a>
 </li>
             
 <li>
-    <a href="./" class="dropdown-item active" aria-current="page">MSI</a>
+    <a href="../../pci-features/msi/" class="dropdown-item">MSI</a>
 </li>
             
 <li>
-    <a href="../flit/" class="dropdown-item">Flit Mode</a>
+    <a href="../../pci-features/flit/" class="dropdown-item">Flit Mode</a>
 </li>
     </ul>
   </li>
@@ -84,23 +84,23 @@
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">x86</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">x86</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="../../x86/nonsmm/" class="dropdown-item">Execution Modes</a>
+    <a href="../nonsmm/" class="dropdown-item">Execution Modes</a>
 </li>
                                     
 <li>
-    <a href="../../x86/smm/" class="dropdown-item">SM Execution Mode</a>
+    <a href="../smm/" class="dropdown-item">SM Execution Mode</a>
 </li>
                                     
 <li>
-    <a href="../../x86/smm-nonsmm-data-transfer/" class="dropdown-item">SMM-nonSMM Data Transfer</a>
+    <a href="../smm-nonsmm-data-transfer/" class="dropdown-item">SMM-nonSMM Data Transfer</a>
 </li>
                                     
 <li>
-    <a href="../../x86/wdt/" class="dropdown-item">Watchdog Timer</a>
+    <a href="./" class="dropdown-item active" aria-current="page">Watchdog Timer</a>
 </li>
                                 </ul>
                             </li>
@@ -113,12 +113,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../p-np/" class="nav-link">
+                                <a rel="prev" href="../smm-nonsmm-data-transfer/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../flit/" class="nav-link">
+                                <a rel="next" class="nav-link disabled">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -140,13 +140,36 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#msi-message-signaled-interrupt" class="nav-link">MSI - Message Signaled Interrupt</a>
+            <li class="nav-item" data-bs-level="1"><a href="#watchdog-timer" class="nav-link">Watchdog Timer</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#watchdog-timers-the-silent-guardian-of-embedded-systems" class="nav-link">Watchdog Timers: The Silent Guardian of Embedded Systems</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#overview" class="nav-link">Overview</a>
+            <li class="nav-item" data-bs-level="2"><a href="#how-it-works" class="nav-link">How it works</a>
               <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#hardware-vs-firmware-watchdogs" class="nav-link">Hardware vs. firmware watchdogs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#simple-vs-windowed-watchdogs" class="nav-link">Simple vs. windowed watchdogs</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#implementation-best-practices" class="nav-link">Implementation best practices</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#a-famous-save" class="nav-link">A famous save</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#the-bottom-line" class="nav-link">The bottom line</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -154,8 +177,22 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="msi-message-signaled-interrupt">MSI - Message Signaled Interrupt</h1>
-<h1 id="overview">Overview</h1></div>
+<h1 id="watchdog-timer">Watchdog Timer</h1>
+<h2 id="watchdog-timers-the-silent-guardian-of-embedded-systems">Watchdog Timers: The Silent Guardian of Embedded Systems</h2>
+<p>A watchdog timer is a hardware- or firmware-based countdown timer that monitors whether a system is still alive. It is used to detect abnormal system behavior and take corrective action to bring the system back to a working state. In embedded systems — where a stuck CPU can mean a crashed drone, a frozen pacemaker, or a bricked satellite — the watchdog is often the last line of defense between a transient fault and a catastrophic failure.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>At its core, a watchdog timer is a programmable counter driven by an independent clock source. Once started, it counts down toward a preset timeout value. The firmware running on the main processor must periodically refresh, or "kick," the counter before it expires. As long as the kicks arrive on schedule, the system is presumed healthy. If a kick is missed — because the processor is stuck in an infinite loop, has deadlocked, or has been corrupted by a hardware glitch — the counter reaches zero and the watchdog forces a system reset or jumps to a recovery handler. Crucially, the watchdog's clock is independent of the main system clock, so even a frozen processor cannot prevent the timer from firing.</p>
+<h2 id="hardware-vs-firmware-watchdogs">Hardware vs. firmware watchdogs</h2>
+<p>Hardware watchdogs are dedicated circuits — either built into the processor or provided as separate supervisor chips on the board. They are immune to software corruption and typically cannot be disabled once enabled, which is exactly what you want in safety-critical designs. Firmware watchdogs, by contrast, are implemented as software timers within the operating system or scheduler. They are flexible and can monitor individual tasks, but they share fate with the processor they are supposed to be guarding, which limits their usefulness against hard hangs.</p>
+<h2 id="simple-vs-windowed-watchdogs">Simple vs. windowed watchdogs</h2>
+<p>A simple watchdog only enforces an upper bound: kick it before timeout, or be reset. A windowed watchdog enforces both a lower and upper bound — kick too early and you also get reset. This catches a surprisingly nasty failure mode: a runaway loop that happens to include the kick instruction will keep a simple watchdog happy forever. Windowed watchdogs are standard in automotive and other safety-critical systems for exactly this reason.</p>
+<h2 id="implementation-best-practices">Implementation best practices</h2>
+<p>The most common mistake is kicking the watchdog from a periodic interrupt. This guarantees the dog is fed even if the main application has died — defeating the entire point. A better pattern is to have each critical task set an "I'm alive" flag, and a single supervisor task that kicks the watchdog only when all flags are set, then clears them. This way, a single hung task brings down the system, and the watchdog does its job.
+Other guidelines worth following: never disable the watchdog in production builds, even temporarily; choose a timeout long enough to cover your worst-case processing delays but short enough to meet your reliability budget; and always log the reset cause on boot so field failures can be diagnosed later. Most processors distinguish between power-on resets, brown-out resets, and watchdog resets — use that information.</p>
+<h2 id="a-famous-save">A famous save</h2>
+<p>The canonical watchdog success story is the Mars Pathfinder mission in 1997. A timing bug caused the lander's software to hang repeatedly on the Martian surface. Each time, the onboard watchdog triggered a reset, keeping the mission alive long enough for engineers on Earth to diagnose the problem and upload a fix. Without the watchdog, Pathfinder would have been a very expensive paperweight on another planet.</p>
+<h2 id="the-bottom-line">The bottom line</h2>
+<p>A watchdog timer is cheap, simple, and one of the highest-leverage reliability mechanisms available to an embedded engineer. It does not prevent bugs — but it ensures that when bugs slip through, the system recovers automatically instead of staying dead. In any design where field reliability matters, the question is not whether to use a watchdog, but how to architect the kick strategy so it actually catches the failures you care about.</p></div>
             </div>
         </div>
 
