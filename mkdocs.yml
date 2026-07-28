@@ -17,6 +17,7 @@ nav:
           - MSI: pci-features/msi.md
           - Flit Mode: pci-features/flit.md
       - CXL: cxl.md
+      - I2C: i2c.md
   - x86:
       - Execution Modes: x86/nonsmm.md
       - SM Execution Mode: x86/smm.md
