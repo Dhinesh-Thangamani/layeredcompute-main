@@ -1,10 +1,5 @@
-# I2C: An Overview
+# Overview
 
-I²C — Quick Brief
+Inter-Integrated Circuit is a famous synchronous serial communication protocol used to connect peripherals to microprocessor or microcontroller.
 
-Two wires, both open-drain with external pull-ups:
-
-SCL — clock, driven by the controller (master)
-SDA — bidirectional data
-
-Devices can only pull low; the pull-up resistor provides the high. That's what makes multi-master arbitration and clock stretching possible for free.
+The I2C’s beauty lies in its simplicity: It only uses two lines to connect devices on a bus. one for serial data (SDA) and another for serial clock (SCL).
